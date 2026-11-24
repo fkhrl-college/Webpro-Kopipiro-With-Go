@@ -80,3 +80,21 @@ func requireLogin(next protectedHandler) http.HandlerFunc {
 		next(w, r, s)
 	}
 }
+
+func requireAdmin(next protectedHandler) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		s, ok := currentSession(r)
+		if !ok {
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			return
+		}
+
+		// 403 forbidden access
+		if !s.IsAdmin() {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+		}
+
+		next(w, r, s)
+	}
+}

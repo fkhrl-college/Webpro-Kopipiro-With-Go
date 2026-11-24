@@ -21,7 +21,9 @@ func main() {
 	mux.HandleFunc("GET /{$}", requireLogin(indexHandler))
 	mux.HandleFunc("/create", requireLogin(createHandler))
 	mux.HandleFunc("/edit", requireLogin(editHandler))
-	mux.HandleFunc("/delete", requireLogin(deleteHandler))
+	mux.HandleFunc("/delete", requireAdmin(deleteHandler))
+	mux.HandleFunc("/users", requireAdmin(usersHandler))
+
 	log.Println("Server running at http://localhost:8081")
 	log.Fatal(http.ListenAndServe(":8081", mux))
 }
